@@ -1,11 +1,14 @@
 import React from 'react';
-import './App.css';
-import { Route, Routes, Navigate } from 'react-router-dom';
 import MyRouter from './componets/MyRouter';
+import { Layout } from 'componets/Layout';
 
 function App() {
   return (
-    <MyRouter />
+    <>
+      <Layout>
+        <MyRouter />
+      </Layout>
+    </>    
   );
 }
 
