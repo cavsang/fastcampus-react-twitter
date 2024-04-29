@@ -1,5 +1,9 @@
 import React from 'react';
 import {FiImage} from 'react-icons/fi';
+import {FaUserCircle} from 'react-icons/fa';
+import {AiFillHeart} from 'react-icons/ai';
+import {FaRegComment} from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 interface PostProps {
     id: string;
@@ -7,7 +11,13 @@ interface PostProps {
     title: string
     content: string;
     createAt: string;
-    uid: string
+    uid: string,
+
+    /* optional 표시할때는 ?로 해준다. */
+    profileUrl?: string,
+    likes? : string[],
+    likeCount? : number;
+    comments?: any
 }
 
 const posts: PostProps[] = [
@@ -51,6 +61,16 @@ const posts: PostProps[] = [
 ]
 
 export default function Home() {
+
+const handleFileUpload = () => {
+
+};
+
+
+const handleDelete = () => {
+
+};
+
     return (
         <div className="home">
             <div className="home__title">Home</div>
@@ -61,11 +81,50 @@ export default function Home() {
             <form className="post-form">
                 <textarea name="content" id="content" required placeholder="what is happening?" className="post-form__textarea"></textarea>
                 <div className="post-form__submit-area">
-                    <label htmlFor="file upload" className="post-form__file">
-                        <FiImage />
+                    <label htmlFor="file-input" className="post-form__file">
+                        <FiImage className="post-form__file-icon"/>
                     </label>
+                    {/* 위의 label의 file-input 과 똑같이 이름을 줘야한다. */}
+                    <input type="file" name="file-input" accept="image/*" onChange={handleFileUpload} className="hidden"/>
+                    <input type="submit" value="tweet" className="post-form__submit-btn"/>
                 </div>
             </form>
+
+            {/* tweet post */}
+            <div className="post">
+                {posts?.map(post => (
+                    <div className="post__box" key={post?.id}>
+                        <Link to={`/posts/${post?.id}`}>
+                            <div className="post__box-profile">
+                                <div className="post__flex">
+                                    {post?.profileUrl ? 
+                                        (<img src={post?.profileUrl} alt="profile" className="post__box-profile-img"/>) 
+                                        : 
+                                        <FaUserCircle className="post__box-profile-icon"/>}
+                                </div>
+                                <div className="post__email">{post?.email}</div>
+                                <div className="createAt">{post?.createAt}</div>
+                            </div>
+                            <div className="post__box-content">
+                                {post?.content}
+                            </div>
+                        </Link>
+                        <div className="post__box-footer">
+                            <button className="post__delete" onClick={handleDelete}>Delete</button>
+                            <button className="post__edit">
+                                <Link to={`/posts/edit/${post?.id}`} >
+                                        Edit
+                                </Link>
+                            </button>
+                                    <button className="post__likes"><AiFillHeart /> {post?.likeCount || 0}</button>
+                            <button className="post__comments">
+                               <FaRegComment /> {post?.comments || 0}
+                            </button>
+                        </div>
+                        
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }
