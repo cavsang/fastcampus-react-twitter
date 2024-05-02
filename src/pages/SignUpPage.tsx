@@ -1,5 +1,6 @@
 import React from 'react';
+import SignUp from 'componets/SignUp';
 
-export default function SignUp(){
-    return <h1>SignUp</h1>
+export default function SignUpPage(){
+    return <SignUp />
 }

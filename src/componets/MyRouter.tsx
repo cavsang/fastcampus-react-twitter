@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from 'pages/HomePage';
 import PostsPage from 'pages/PostsPage';
@@ -12,22 +12,37 @@ import SearchPage from 'pages/SearchPage';
 import SignInPage from 'pages/SignInPage';
 import SignUpPage from 'pages/SignUpPage';
 
-export default function MyRouter(){
+interface MyRouterProps{
+    isAunthenticated? : boolean
+}
+
+export default function MyRouter({isAunthenticated}:MyRouterProps){
+
+
     return (
         <Routes>
-            <Route path="/" element={<HomePage />}></Route>
-            <Route path="/posts" element={<PostsPage />}></Route>
-            <Route path="/posts/:id" element={<PostDetailPage />}></Route>
-            <Route path="/posts/new" element={<PostNewPage />}></Route>
-            <Route path="/posts/edit/:id" element={<PostEditPage />}></Route>
-            <Route path="/profile" element={<ProfilePage />}></Route>
-            <Route path="/profile/edit" element={<ProfileEditPage />}></Route>
-            <Route path="/notification" element={<NotificationPage />}></Route>
-            <Route path="/search" element={<SearchPage />}></Route>
-            <Route path="/signin" element={<SignInPage />}></Route>
-            <Route path="/signup" element={<SignUpPage />}></Route>
-
-            <Route path="*" element={<Navigate replace to="/" />} />
+            {isAunthenticated ? 
+            <>
+                <Route path="/" element={<HomePage />}></Route>
+                <Route path="/posts" element={<PostsPage />}></Route>
+                <Route path="/posts/:id" element={<PostDetailPage />}></Route>
+                <Route path="/posts/new" element={<PostNewPage />}></Route>
+                <Route path="/posts/edit/:id" element={<PostEditPage />}></Route>
+                <Route path="/profile" element={<ProfilePage />}></Route>
+                <Route path="/profile/edit" element={<ProfileEditPage />}></Route>
+                <Route path="/notification" element={<NotificationPage />}></Route>
+                <Route path="/search" element={<SearchPage />}></Route>
+                <Route path="/signin" element={<SignInPage />}></Route>
+                <Route path="/signup" element={<SignUpPage />}></Route>
+                <Route path="*" element={<Navigate replace to="/" />} />
+            </>
+            :
+            <>
+                <Route path="/signin" element={<SignInPage />}></Route>
+                <Route path="/signup" element={<SignUpPage />}></Route>
+                <Route path="*" element={<SignInPage />} />
+            </>
+            }
         </Routes>
     )
 }

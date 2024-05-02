@@ -209,6 +209,55 @@ body {
       }
     }
   }
+
+
+  /* Sign up */
+  .signup{
+    margin: 0 auto;
+    
+    &__email, &__password{
+      display: flex;
+      flex-direction: column;
+
+      label{
+        font-size: 11pt;
+        margin: 5px 10px;
+      }
+
+      input{
+        margin: 5px 10px;
+        border: $border;
+        height: 40px;
+        border-radius: 0.5rem;
+        font-size: 15pt;
+      }
+    }
+
+    &__submit{
+      display: block;
+      margin: auto;
+      margin-top: 20px;
+      width: 97%;
+      height: 40px;
+      border: none;
+      background-color: $primaryColor;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 .hidden{
