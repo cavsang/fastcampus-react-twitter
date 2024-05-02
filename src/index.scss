@@ -260,6 +260,23 @@ body {
 
 }
 
+.sign__inup{
+  padding: 7px;
+  font-size: 10pt;
+
+  a{
+    text-decoration: none;
+
+    &:hover, &:focus{
+      color: gray;
+    }
+  }
+}
+
+.error__message{
+  color: red;
+  text-align: center;
+}
 .hidden{
   visibility: hidden;
 }

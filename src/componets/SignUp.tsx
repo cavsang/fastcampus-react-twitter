@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth'
+import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
 import {toast} from 'react-toastify';
 import { app } from 'util/Firebase';
+import { Link } from 'react-router-dom';
+import {SignUpTypes} from 'util/MyTypes';
 
-type signUpTypes = {
-    email: string,
-    password: string,
-    repassword: string
-}
 
 export default function SignUpPage(){
 
-    const [vals, setVals] = useState<signUpTypes>(
+    const [error, setError] = useState<string>();
+    const [vals, setVals] = useState<SignUpTypes>(
         {
             email : '',
             password: '',
@@ -22,6 +20,30 @@ export default function SignUpPage(){
     
     const onChange= (e:React.ChangeEvent<HTMLInputElement>) => {
         const {target : {name , value}} = e;
+
+        if(name === "email"){
+             const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+             if(!value?.match(validRegex)){
+                setError("Email 형식이 잘못되었습니다.");
+             }else{
+                 setError("");
+             }
+        }else if(name === "password"){
+            if(value.length < 8){
+                setError("비밀번호는 8자리 이상으로 입력 해주세요.");
+            }else{
+                setError("");
+            }
+            
+        }else if(name === "repassword"){
+            if(vals?.password !== value){
+                setError("비밀번호 확인이 정확하지 않습니다.");
+            }else{
+                setError("");
+            }
+        }
+
+
         setVals({
             ...vals,
             [name]: value
@@ -30,13 +52,11 @@ export default function SignUpPage(){
 
     const onSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         try {
             const auth = getAuth(app);
             await createUserWithEmailAndPassword(auth, vals?.email, vals?.password);
             toast.success('회원가입 완료 하였습니다.');
-            ''
-        } catch (e) {
+        } catch (e:any) {
             toast.error(e?.code);
         }
     }
@@ -56,15 +76,20 @@ export default function SignUpPage(){
                     </div>
                     <div className="signup__password">
                         <label htmlFor="password">PASSWORD</label>
-                        <input type="text" name="password" id="password" onChange={onChange} 
+                        <input type="password" name="password" id="password" onChange={onChange} 
                         value={vals.password} required placeholder="PASSWORD"/>
                     </div>
                     <div className="signup__password">
                         <label htmlFor="repassword">PASSWORD CONFIRM</label>
-                        <input type="text" name="repassword" id="repassword" onChange={onChange} 
+                        <input type="password" name="repassword" id="repassword" onChange={onChange} 
                         value={vals.repassword} required placeholder="PASSWORD CONFIRM"/>
                     </div>
-                    <button name="submit" id="submit" className="signup__submit">Sign up</button>
+    {error && error?.length > 0  && (<div className="error__message">{error}</div>)}
+                    <button name="submit" id="submit" className="signup__submit">Sign Up</button>
+
+                    <div className="sign__inup">
+                        계정이 이미 있으신가요? <Link to="/signin" >Sign In</Link>
+                    </div>
                 </form>
             </div>
         </>

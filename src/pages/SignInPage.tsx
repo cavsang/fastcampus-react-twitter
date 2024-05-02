@@ -1,5 +1,6 @@
 import React from 'react';
+import SignIn from 'componets/SignIn';
 
-export default function SignIn(){
-    return <h1>SignIn</h1>
+export default function SignInPage(){
+    return <SignIn />
 }
