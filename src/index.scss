@@ -64,6 +64,7 @@ body {
         background-color: transparent;
         padding: 16px 0px;
         backdrop-filter: blur(10px);
+        cursor: pointer;
       }
     }
   }
@@ -244,6 +245,33 @@ body {
       border-radius: 0.5rem;
       cursor: pointer;
     }
+
+    .btn__email{
+      &:hover, &:focus{
+         background-color: lightyellow;
+        color: $activeBorder;
+      }
+    }
+
+    .btn__google{
+      color: $activeBorder;
+      background-color: $white;
+
+      &:hover, &:focus{
+        background-color: lightgrey;
+        color: $white;
+      }
+    }
+
+    .btn__github{
+      color: $white;
+      background-color: black;
+
+      &:hover, &:focus{
+        background-color: burlywood;
+        color: $primaryColor;
+      }
+    }
   }
 
 
@@ -259,6 +287,28 @@ body {
 
 
 }
+
+
+
+
+/* Loader start*/
+.loader{
+  width: 48px;
+  height: 48px;
+  border: 5px solid blue;
+  border-radius: 50%;
+  z-index: 9999;
+  animation: rotation 1s linear infinite;
+
+  /* 정가운데 맞추기 */
+  position: absolute;
+  left:0;
+  right:0;
+  top:0;
+  bottom: 0;
+  margin : auto;
+}
+/* Loader End*/
 
 .sign__inup{
   padding: 7px;

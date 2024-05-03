@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup} from 'firebase/auth';
 import {toast} from 'react-toastify';
 import { app } from 'util/Firebase';
 import { Link } from 'react-router-dom';
@@ -61,6 +61,28 @@ export default function SignUpPage(){
         }
     }
 
+    const socialLogin = async (e:any) => {
+        const {target : {name}} = e;
+        let provider;
+
+        const auth = getAuth(app);
+
+        if(name === "google"){
+            provider = new GoogleAuthProvider();
+        }else if(name ==="github"){
+            provider = new GithubAuthProvider();
+        }
+
+        await signInWithPopup(auth, provider as GithubAuthProvider | GoogleAuthProvider)
+        .then(result => {
+            //console.log(result);
+            toast.success('회원가입에 성공하였습니다.');
+        })
+        .catch(err => {
+            toast.error(err?.message);
+        });
+    }
+
     return (
         <>
             <div className="home">
@@ -85,7 +107,11 @@ export default function SignUpPage(){
                         value={vals.repassword} required placeholder="PASSWORD CONFIRM"/>
                     </div>
     {error && error?.length > 0  && (<div className="error__message">{error}</div>)}
-                    <button name="submit" id="submit" className="signup__submit">Sign Up</button>
+                    <button name="submit" id="submit" className="signup__submit btn__email">Sign Up</button>
+
+                    <button name="google" id="google" onClick={socialLogin} className="signup__submit btn__google">Google 회원가입</button>
+
+                    <button name="github" id="github" onClick={socialLogin} className="signup__submit btn__github">Github 회원가입</button>
 
                     <div className="sign__inup">
                         계정이 이미 있으신가요? <Link to="/signin" >Sign In</Link>
