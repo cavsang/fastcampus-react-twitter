@@ -54,6 +54,20 @@ const posts: PostProps[] = [
         createAt: "2024-04-28",
         uid: "123123"
         , title: "제목111"
+    }, {
+        id: "6",
+        email: "test@test.com",
+        content: "제모깁니다5.",
+        createAt: "2024-04-28",
+        uid: "123123"
+        , title: "제목111"
+    }, {
+        id: "7",
+        email: "test@test.com",
+        content: "제모깁니다5.",
+        createAt: "2024-04-28",
+        uid: "123123"
+        , title: "제목111"
     }
 ]
 
@@ -64,11 +78,14 @@ export default function Home() {
 
     return (
         <div className="home">
-            <div className="home__title">Home</div>
-            <div className="home__tabs">
-                <div className="home__tab home__tab--active">For You</div>
-                <div className="home__tab">Following</div>
+            <div className="home__top">
+                <div className="home__title">Home</div>
+                <div className="home__tabs">
+                    <div className="home__tab home__tab--active">For You</div>
+                    <div className="home__tab">Following</div>
+                </div>
             </div>
+            
             
             <PostForm />
 
