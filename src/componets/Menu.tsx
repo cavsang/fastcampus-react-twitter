@@ -6,6 +6,7 @@ import {MdLogout} from 'react-icons/md';
 import { getAuth, signOut } from 'firebase/auth';
 import { app } from 'util/Firebase';
 import { toast } from 'react-toastify';
+import { FaSearch } from "react-icons/fa";
 
 export default function MenuList(){
 
@@ -27,6 +28,7 @@ export default function MenuList(){
             <div className="footer__grid">
                 <button type="button" onClick={() => navigate("/")}><BsHouse /> Home</button>
                 <button onClick={() => navigate("/profile")}><FaUserCircle /> Profile</button>
+                <button onClick={() => navigate("/search")}><FaSearch /> Search</button>
                 <button onClick={logOut}><MdLogout /> Logout</button>
             </div>
         </div>

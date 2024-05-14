@@ -1,99 +1,51 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PostForm from './postForm';
 import PostBox from './PostBox';
-
-export interface PostProps {
-    id: string;
-    email: string;
-    title: string
-    content: string;
-    createAt: string;
-    uid: string,
-
-    /* optional 표시할때는 ?로 해준다. */
-    profileUrl?: string,
-    likes? : string[],
-    likeCount? : number;
-    comments?: any
-}
-
-const posts: PostProps[] = [
-    {
-        id: "1",
-        email: "test@test.com",
-        content: "제모깁니다.",
-        createAt: "2024-04-28",
-        uid: "123123"
-        , title: "제목111"
-
-    }, {
-        id: "2",
-        email: "test@test.com",
-        content: "제모깁니다2.",
-        createAt: "2024-04-28",
-        uid: "123123"
-        , title: "제목111"
-    }, {
-        id: "3",
-        email: "test@test.com",
-        content: "제모깁니다3.",
-        createAt: "2024-04-28",
-        uid: "123123"
-        , title: "제목111"
-    }, {
-        id: "4",
-        email: "test@test.com",
-        content: "제모깁니다4.",
-        createAt: "2024-04-28",
-        uid: "123123"
-        , title: "제목111"
-    }, {
-        id: "5",
-        email: "test@test.com",
-        content: "제모깁니다5.",
-        createAt: "2024-04-28",
-        uid: "123123"
-        , title: "제목111"
-    }, {
-        id: "6",
-        email: "test@test.com",
-        content: "제모깁니다5.",
-        createAt: "2024-04-28",
-        uid: "123123"
-        , title: "제목111"
-    }, {
-        id: "7",
-        email: "test@test.com",
-        content: "제모깁니다5.",
-        createAt: "2024-04-28",
-        uid: "123123"
-        , title: "제목111"
-    }
-]
+import AuthContext from 'util/AuthContext';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { db } from 'util/Firebase';
+import Header from './Header';
+import { PostProps } from 'util/MyTypes';
 
 export default function Home() {
 
+    const[posts, setPosts] = useState<PostProps[]>([]);
+    const {user} = useContext(AuthContext);
 
+    useEffect(() => {
+        if(user){
+            let postRef = collection(db, "posts");
+            let postQuery = query(postRef, orderBy("createAt","desc"));
 
+            onSnapshot(postQuery, (snapshot) => {
+                let dataObj = snapshot.docs.map((doc) => ({
+                    ...doc.data(),
+                    id: doc?.id
+                }));
+                setPosts(dataObj as PostProps[]);
+            });
+        }
+
+    },[user]);
+    
 
     return (
         <div className="home">
-            <div className="home__top">
-                <div className="home__title">Home</div>
-                <div className="home__tabs">
-                    <div className="home__tab home__tab--active">For You</div>
-                    <div className="home__tab">Following</div>
-                </div>
-            </div>
             
+            <Header />
             
             <PostForm />
 
             {/* tweet post */}
             <div className="post">
-                {posts?.map(post => (
+                {posts?.length > 0 ? (posts?.map(post => (
                     <PostBox post={post} key={post?.id}/>
-                ))}
+                ))):(<div className="post__no-post">
+                        <div className="post__text">
+                            게시글이 없습니다.
+                        </div>
+                    </div>)
+                }
             </div>
         </div>
     )

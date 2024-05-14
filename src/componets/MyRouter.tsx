@@ -3,7 +3,6 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from 'pages/HomePage';
 import PostsPage from 'pages/PostsPage';
 import PostNewPage from 'pages/PostNewPage';
-import PostEditPage from 'pages/PostEditPage';
 import PostDetailPage from "pages/PostDetailPage"
 import ProfilePage from 'pages/ProfilePage';
 import ProfileEditPage from 'pages/ProfileEditPage';
@@ -11,6 +10,7 @@ import NotificationPage from 'pages/NotificationPage';
 import SearchPage from 'pages/SearchPage';
 import SignInPage from 'pages/SignInPage';
 import SignUpPage from 'pages/SignUpPage';
+import PostEditPage from 'pages/PostEditPage';
 
 interface MyRouterProps{
     isAunthenticated? : boolean

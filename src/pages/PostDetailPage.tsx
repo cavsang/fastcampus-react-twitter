@@ -1,5 +1,7 @@
 import React from 'react';
+import PostDetail from 'componets/PostDetail';
 
-export default function PostDetail(){
-    return <h1>PostDetail</h1>
+export default function PostDetailPage(){
+    return <PostDetail />;
+    
 }
