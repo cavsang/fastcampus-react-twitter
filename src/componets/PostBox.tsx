@@ -6,7 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from "util/AuthContext";
 import { PostProps } from "util/MyTypes";
 import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "util/Firebase";
+import { db, storage } from "util/Firebase";
+import { ref, deleteObject } from "firebase/storage";
 
 interface PostProp{
     post: PostProps;
@@ -18,8 +19,15 @@ export default function PostBox({post}:PostProp){
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
 
+    const imageRef = ref(storage, post?.imageUrl);
+
     const handleDelete = async (id:string) => {
         if(window.confirm("삭제 하시겠습니까?")){
+
+            if(post?.imageUrl){
+                deleteObject(imageRef).catch(error => {console.log(error)});
+            }
+
             await deleteDoc(doc(db,'posts', id));
             navigate("/");
         }
@@ -42,12 +50,17 @@ export default function PostBox({post}:PostProp){
             <div className="post__box-content">
                 {post?.content}
             </div>
+            {post?.imageUrl && (
+                <div className="post__image-div">
+                    <img src={post?.imageUrl} alt="image-div" className="post__image" width="100" height= "100"/>
+                </div> 
+            )}
         </Link>
         <div className="post-form">
             <div className="post-form__hashtag">
                     <div className="post-form__hashtag-output">
-                        {post?.hashTags?.map(hash => {
-                        return <button>#{hash}</button>;
+                        {post?.hashTags?.map((hash, index) => {
+                        return <button key={index}>#{hash}</button>;
                         })}
                     </div>
                 </div>

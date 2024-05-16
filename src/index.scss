@@ -127,6 +127,43 @@ body {
 
   .post-form{
 
+    &__image-area{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    &__attachment{
+      display: flex;
+      align-items: flex-end;
+      gap : 16px;
+
+      button{
+        border: none;
+        cursor: pointer;
+        background-color: $danger;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        text-align: center;
+        padding: 3px 10px;
+
+        &:hover, &:focus{
+          background-color: darken($color: $danger, $amount: 10);
+        }
+      }
+    }
+
+    &__file{
+    }
+
+    &__submit-area{
+      display: flex;
+      border-bottom: $border;
+      padding: 10px;
+      align-items: end;
+      justify-content: space-between;
+    }
+
     &__hashtag{
       display: flex;
       align-items: center;
@@ -180,20 +217,13 @@ body {
       outline: none;
     }
 
-    &__submit-area{
-      display: flex;
-      height: 30px;
-      border-bottom: $border;
-      padding: 10px;
-      align-items: center;
-      justify-content: space-between;
-    }
+    
 
     &__submit-btn{
         width: 70px;
         height: 30px;
         border: none;
-        border-radius: 40%;
+        border-radius: 0.5rem;
         background-color: $primaryColor;
         margin-right: 10px;
       }
@@ -201,6 +231,10 @@ body {
 
 
   .post{
+
+    &__image-div{
+      padding: 16px;
+    }
 
     &__back{
       border-bottom: 1px solid $gray;
@@ -444,5 +478,7 @@ body {
 }
 .hidden{
   visibility: hidden;
+  width: 0;
+  height: 0;
 }
 
