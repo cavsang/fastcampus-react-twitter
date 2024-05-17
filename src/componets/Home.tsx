@@ -32,7 +32,7 @@ export default function Home() {
     return (
         <div className="home">
             
-            <Header />
+            <Header title1="Home" title2="For You" title3="Follow" />
             
             <PostForm />
 

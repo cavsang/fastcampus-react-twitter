@@ -28,7 +28,7 @@ export default function Search(){
                     ...doc?.data(),
                     id: doc?.id
                 }));
-                console.log(dataObj);
+                //console.log(dataObj);
                 setPosts(dataObj as PostProps[]);
             });
         }

@@ -170,7 +170,7 @@ export default function PostEdit(){
                         )}
                         
                     </div>
-                    <input type="submit" value="tweet" className="post-form__submit-btn"/>
+                    <input type="submit" value="tweet" className="post-form__submit-btn" disabled={isSubmit}/>
                 </div>
         </form>
     );
