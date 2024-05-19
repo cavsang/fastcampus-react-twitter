@@ -133,6 +133,19 @@ body {
       gap: 8px;
     }
 
+    &__profile{
+      display: flex;
+      justify-content: center;
+    }
+
+    &__input{
+      width: 100%;
+      border: none;
+      outline:none;
+      font-size: 16pt;
+      padding: 5px;
+    }
+
     &__attachment{
       display: flex;
       align-items: flex-end;

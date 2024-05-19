@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Profile(){
 
-    const PROFILE_DEFAULT_IMG  = "logo512.png"
+    const PROFILE_DEFAULT_IMG  = "logo192.png"
     const [posts, setPosts] = useState<PostProps[]>([]);
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
