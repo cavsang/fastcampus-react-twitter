@@ -15,6 +15,7 @@ export default function ProfileEdit(){
     const [displayName, setDisplayName] = useState<string>();
     const [image, setImage] = useState<string | null>(null);
     const {user} = useContext(AuthContext);
+    const STORAGE_DOWNLOAD_URL_STR = "https://firebasestorage.googleapis.com";
 
     const onClick = () => {
         navigate(-1);
@@ -41,7 +42,7 @@ export default function ProfileEdit(){
         
         try {
             //기존 이미지 삭제
-            if(user?.photoURL){
+            if(user?.photoURL && user?.photoURL.includes(STORAGE_DOWNLOAD_URL_STR)){
                 const imageRef = ref(storage, user?.photoURL);
                 await deleteObject(imageRef).catch(error => console.log(error));
             }

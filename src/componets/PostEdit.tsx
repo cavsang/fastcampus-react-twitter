@@ -37,7 +37,7 @@ export default function PostEdit(){
         if(params?.id){
             getDocs(params?.id);
         }
-    },[getDocs,params?.id]);
+    },[params?.id]);
 
     const onChange = (e:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         const {target: {name, value}} = e;
@@ -105,7 +105,6 @@ export default function PostEdit(){
                 hashTags: hashTag,
             };
 
-            console.log(isChange);
 
             if(image){
                 if(isChange){

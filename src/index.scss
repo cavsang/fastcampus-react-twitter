@@ -239,6 +239,10 @@ body {
         border-radius: 0.5rem;
         background-color: $primaryColor;
         margin-right: 10px;
+
+        &:hover, &:focus{
+          background-color: $activeBorder;
+        }
       }
   }
 
@@ -417,7 +421,7 @@ body {
 
   .search{
     &__title{
-      text-align: center;
+      padding: 10px;
       font-size: 30px;
       font-weight: 600;
       border-bottom: 1px solid $gray;
@@ -439,9 +443,46 @@ body {
       }
     }
   }
-  
 
 
+  .profile{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid $gray;
+
+    &__image{
+      width:100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+
+    &__btn{
+      border: none;
+      outline: none;
+      background-color: $primaryColor;
+      border-radius: 0.3rem;
+      padding: 5px;
+    }
+
+    &__text{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      font-size: 20pt;
+      font-weight: 510;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      border-top: 1px solid $gray;
+    }
+
+    &__email{
+      font-size: 14pt;
+      align-self: flex-end;
+    }
+  }
 
 
 

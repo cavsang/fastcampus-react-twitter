@@ -1,20 +1,17 @@
-import React, { useContext, useCallback } from "react";
+import React, { useContext } from "react";
 import {FaUserCircle} from 'react-icons/fa';
-import {AiFillHeart} from 'react-icons/ai';
+import {AiFillHeart, AiOutlineHeart} from 'react-icons/ai';
 import {FaRegComment} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from "util/AuthContext";
-import { PostProps } from "util/MyTypes";
-import { deleteDoc, doc } from "firebase/firestore";
+import { WrapPostProps } from "util/MyTypes";
+import { deleteDoc, doc, updateDoc, increment, arrayUnion, getDoc, arrayRemove } from "firebase/firestore";
 import { db, storage } from "util/Firebase";
 import { ref, deleteObject } from "firebase/storage";
 
-interface PostProp{
-    post: PostProps;
-}
 
 
-export default function PostBox({post}:PostProp){
+export default function PostBox({post}:WrapPostProps){
 
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
@@ -33,6 +30,24 @@ export default function PostBox({post}:PostProp){
         }
     };
 
+    
+
+    const onLikes = async () => {
+        const postRef = doc(db, "posts", post?.id);
+        const document = await getDoc(postRef);
+
+        if(user?.uid && document?.data()?.likes?.includes(user?.uid)){
+            await updateDoc(postRef,{
+                likeCount: increment(-1),
+                likes: arrayRemove(user?.uid)
+            });
+        }else{
+            await updateDoc(postRef,{
+                likeCount: increment(1),
+                likes: arrayUnion(user?.uid)
+            });
+        }
+    }
 
     return (
         <div className="post__box">
@@ -79,9 +94,13 @@ export default function PostBox({post}:PostProp){
             </>
             )
             }
-            <button className="post__likes"><AiFillHeart /> {post?.likeCount || 0}</button>
+            <button className="post__likes">
+                {user && post?.likes?.includes(user?.uid) ? <AiFillHeart onClick={onLikes}/> : <AiOutlineHeart onClick={onLikes}/>} 
+                {post?.likeCount || 0}
+            </button>
+            
             <button className="post__comments">
-                <FaRegComment /> {post?.comments || 0}
+                <FaRegComment /> {post?.comments?.length ? post?.comments?.length : 0}
             </button>
         </div>
         

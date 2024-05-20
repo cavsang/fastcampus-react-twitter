@@ -10,6 +10,14 @@ export interface ChildrenProps{
     children : React.ReactNode;
 }
 
+export interface WrapPostProps{
+    post: PostProps
+}
+
+export interface WrapCommentProps{
+    comment: CommentProps
+}
+
 export interface PostProps {
     id: string;
     email: string;
@@ -22,7 +30,15 @@ export interface PostProps {
     profileUrl?: string,
     likes? : string[],
     likeCount? : number;
-    comments?: any,
+    comments?: CommentProps[],
     hashTags: string[],
     imageUrl : string,
+}
+
+export interface CommentProps{
+    comment: string,
+    createAt : string,
+    email?: string,
+    uid: string,
+    id?: string 
 }

@@ -6,6 +6,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import Loader from './Loader';
 import PostBox from './PostBox';
 import { RiArrowGoBackFill } from "react-icons/ri";
+import CommentForm from './CommentForm';
+import CommentBoxs from './CommentBoxs';
 
 export default function PostDetail(){
 
@@ -21,7 +23,7 @@ export default function PostDetail(){
 
     useEffect(() => {
         getPost(params?.id as string);
-    },[getPost, params?.id]);
+    },[params?.id]);
 
     const onClick = () => {
         navigate(-1);
@@ -32,7 +34,12 @@ export default function PostDetail(){
             <div className="post__back" onClick={onClick}>
                 <RiArrowGoBackFill className="post__back-icon" />
             </div>
-            {post ? <PostBox post={post} /> : <Loader />}
+            {post ? 
+            <>
+                <PostBox post={post} />
+                <CommentForm post={post} />
+                <CommentBoxs post={post}/>
+            </> : <Loader />}
         </div>
     )
 }
