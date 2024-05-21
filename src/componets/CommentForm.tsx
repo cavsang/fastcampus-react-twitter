@@ -29,7 +29,7 @@ export default function CommentForm({post}:WrapPostProps){
                 second: "2-digit"
             }),
             email: user?.email as string,
-            uid: user?.email as string
+            uid: user?.uid as string
         };
 
         try {
@@ -37,6 +37,7 @@ export default function CommentForm({post}:WrapPostProps){
                 comments: arrayUnion(cm)
             });
             toast.success('댓글이 입력되었습니다.');
+            setComment("");
         } catch (e:any) {
             toast.error(e?.code);
         }

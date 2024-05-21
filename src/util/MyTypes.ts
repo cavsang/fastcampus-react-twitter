@@ -16,6 +16,7 @@ export interface WrapPostProps{
 
 export interface WrapCommentProps{
     comment: CommentProps
+    onDelete: any
 }
 
 export interface PostProps {

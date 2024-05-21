@@ -290,10 +290,13 @@ body {
 
       .post__box-profile{
         display: flex;
-        gap: 20px;
         height: 30px;
         color: gray;
         padding-bottom: 20px;
+
+        .post__flex{
+          flex-grow: 0.5;
+        }
 
         .post__box-profile-icon{
           width: 30px;
@@ -305,12 +308,50 @@ body {
           align-content: center;
           font-size: 10pt;
           color: gray;
+          flex-grow: 1.2;
         }
 
         .post__createAt{
           align-content: center;
           font-size: 11pt;
           color: gray;
+          flex-grow: 2.1;
+        }
+      }
+
+      .post__follow{
+        text-align: right;
+        padding: 3px 10px 3px 3px;
+        flex-grow: 6.2;
+
+        button{
+          border: none;
+          outline: none;
+          font-size: 11pt;
+          background-color: white;
+          color: $primaryColor;
+          font-weight: 550;
+          padding:5px 10px;
+          border-radius: 10px;
+          cursor: pointer;
+        }
+      }
+
+      .post__following{
+        text-align: right;
+        padding: 3px 10px 3px 3px;
+        flex-grow: 5.5;
+
+        button{
+          border: none;
+          outline: none;
+          font-size: 11pt;
+          background-color: $primaryColor;
+          color: white;
+          font-weight: 550;
+          padding:5px 10px;
+          border-radius: 10px;
+          cursor: pointer;
         }
       }
 

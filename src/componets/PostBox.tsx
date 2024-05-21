@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {FaUserCircle} from 'react-icons/fa';
 import {AiFillHeart, AiOutlineHeart} from 'react-icons/ai';
 import {FaRegComment} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from "util/AuthContext";
 import { WrapPostProps } from "util/MyTypes";
-import { deleteDoc, doc, updateDoc, increment, arrayUnion, getDoc, arrayRemove } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc, increment, arrayUnion, getDoc, arrayRemove, setDoc, onSnapshot } from "firebase/firestore";
 import { db, storage } from "util/Firebase";
 import { ref, deleteObject } from "firebase/storage";
 
@@ -15,8 +15,8 @@ export default function PostBox({post}:WrapPostProps){
 
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
-
     const imageRef = ref(storage, post?.imageUrl);
+    const [following, setFollwoing] = useState<boolean>(false);
 
     const handleDelete = async (id:string) => {
         if(window.confirm("삭제 하시겠습니까?")){
@@ -29,8 +29,6 @@ export default function PostBox({post}:WrapPostProps){
             navigate("/");
         }
     };
-
-    
 
     const onLikes = async () => {
         const postRef = doc(db, "posts", post?.id);
@@ -49,9 +47,51 @@ export default function PostBox({post}:WrapPostProps){
         }
     }
 
+    const followingRef = doc(db, "following", user?.uid as string);
+
+    const handleFollow = async () => {
+        await setDoc(followingRef,{
+            users : arrayUnion(post?.uid)
+        },{
+            merge:true
+        });
+
+        const followRef = doc(db, "follow", post?.uid as string);
+        await setDoc(followRef,{
+            users : arrayUnion(user?.uid)
+        },{
+            merge:true
+        });
+    }
+
+    const handleFollowing = async () => {
+        await setDoc(followingRef,{
+            users : arrayRemove(post?.uid)
+        },{
+            merge:true
+        });
+
+        const followRef = doc(db, "follow", post?.uid as string);
+        await setDoc(followRef,{
+            users : arrayRemove(user?.uid)
+        },{
+            merge:true
+        });
+    }
+
+
+    useEffect( () => {
+        if(user){
+            onSnapshot(followingRef, (doc) => {
+                //setComments(doc?.data()?.comments);
+                setFollwoing(doc?.data()?.users?.includes(post?.uid));
+            });
+        }
+    },[user]);
+
     return (
         <div className="post__box">
-        <Link to={`/posts/${post?.id}`}>
+        
             <div className="post__box-profile">
                 <div className="post__flex">
                     {post?.profileUrl ? 
@@ -61,16 +101,26 @@ export default function PostBox({post}:WrapPostProps){
                 </div>
                 <div className="post__email">{post?.email}</div>
                 <div className="post__createAt">{post?.createAt}</div>
+                {(user?.uid !== post?.uid) ? 
+                    (following ? 
+                        <div className="post__following"><button onClick={handleFollowing}>following</button></div> 
+                        : 
+                        <div className="post__follow"><button onClick={handleFollow}>follow</button></div>
+                    )
+                    :
+                    <div className="post__following"></div>}
+                
             </div>
-            <div className="post__box-content">
-                {post?.content}
-            </div>
-            {post?.imageUrl && (
-                <div className="post__image-div">
-                    <img src={post?.imageUrl} alt="image-div" className="post__image" width="100" height= "100"/>
-                </div> 
-            )}
-        </Link>
+            <Link to={`/posts/${post?.id}`}>
+                <div className="post__box-content">
+                    {post?.content}
+                </div>
+                {post?.imageUrl && (
+                    <div className="post__image-div">
+                        <img src={post?.imageUrl} alt="image-div" className="post__image" width="100" height= "100"/>
+                    </div> 
+                )}
+            </Link>
         <div className="post-form">
             <div className="post-form__hashtag">
                     <div className="post-form__hashtag-output">
