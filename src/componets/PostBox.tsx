@@ -5,11 +5,10 @@ import {FaRegComment} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from "util/AuthContext";
 import { WrapPostProps } from "util/MyTypes";
-import { deleteDoc, doc, updateDoc, increment, arrayUnion, getDoc, arrayRemove, setDoc, onSnapshot } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc, increment, arrayUnion, getDoc, arrayRemove, setDoc, onSnapshot, collection, addDoc } from "firebase/firestore";
 import { db, storage } from "util/Firebase";
 import { ref, deleteObject } from "firebase/storage";
-
-
+import { toast } from "react-toastify";
 
 export default function PostBox({post}:WrapPostProps){
 
@@ -17,6 +16,7 @@ export default function PostBox({post}:WrapPostProps){
     const navigate = useNavigate();
     const imageRef = ref(storage, post?.imageUrl);
     const [following, setFollwoing] = useState<boolean>(false);
+
 
     const handleDelete = async (id:string) => {
         if(window.confirm("삭제 하시겠습니까?")){
@@ -49,22 +49,45 @@ export default function PostBox({post}:WrapPostProps){
 
     const followingRef = doc(db, "following", user?.uid as string);
 
-    const handleFollow = async () => {
-        await setDoc(followingRef,{
-            users : arrayUnion(post?.uid)
-        },{
-            merge:true
-        });
+    const onFollow = async () => {
 
-        const followRef = doc(db, "follow", post?.uid as string);
-        await setDoc(followRef,{
-            users : arrayUnion(user?.uid)
-        },{
-            merge:true
-        });
+        try {
+            await setDoc(followingRef,{
+                users : arrayUnion(post?.uid)
+            },{
+                merge:true
+            });
+
+            const followRef = doc(db, "follow", post?.uid as string);
+            await setDoc(followRef,{
+                users : arrayUnion(user?.uid)
+            },{
+                merge:true
+            });
+
+            if(user?.uid !== post?.uid){
+
+                await addDoc(collection(db, 'notifications'),{
+                    content: `${user?.email} 이 팔로우 하였습니다.`,
+                    createAt : new Date()?.toLocaleDateString("ko",{
+                        hour: "2-digit",
+                        minute : "2-digit",
+                        second: "2-digit"
+                    }),
+                    isRead: false,
+                    uid: post?.uid,
+                    url: ''
+                });
+            }
+            toast.success('팔로우 했습니다.');
+        } catch (e:any) {
+            toast.error(e?.code);
+        }
+        
+
     }
 
-    const handleFollowing = async () => {
+    const removeFollow = async () => {
         await setDoc(followingRef,{
             users : arrayRemove(post?.uid)
         },{
@@ -103,9 +126,9 @@ export default function PostBox({post}:WrapPostProps){
                 <div className="post__createAt">{post?.createAt}</div>
                 {(user?.uid !== post?.uid) ? 
                     (following ? 
-                        <div className="post__following"><button onClick={handleFollowing}>following</button></div> 
+                        <div className="post__following"><button onClick={removeFollow}>following</button></div> 
                         : 
-                        <div className="post__follow"><button onClick={handleFollow}>follow</button></div>
+                        <div className="post__follow"><button onClick={onFollow}>follow</button></div>
                     )
                     :
                     <div className="post__following"></div>}

@@ -19,6 +19,15 @@ export interface WrapCommentProps{
     onDelete: any
 }
 
+export interface NoticationProps{ 
+    id: string,
+    content : string,
+    createAt: string,
+    isRead : boolean,
+    uid: string,
+    url?:string
+}
+
 export interface PostProps {
     id: string;
     email: string;

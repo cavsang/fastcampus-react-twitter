@@ -7,6 +7,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import { app } from 'util/Firebase';
 import { toast } from 'react-toastify';
 import { FaSearch } from "react-icons/fa";
+import {IoMdNotifications} from 'react-icons/io';
 
 export default function MenuList(){
 
@@ -17,7 +18,7 @@ export default function MenuList(){
             const auth = getAuth(app);
             await signOut(auth);
             toast.success('로그아웃 되었습니다.');
-            navigate("/signup");
+            navigate("/signin");
         } catch (error: any) {
             toast.error(error?.code);
         }
@@ -29,6 +30,7 @@ export default function MenuList(){
                 <button type="button" onClick={() => navigate("/")}><BsHouse /> Home</button>
                 <button onClick={() => navigate("/profile")}><FaUserCircle /> Profile</button>
                 <button onClick={() => navigate("/search")}><FaSearch /> Search</button>
+                <button onClick={() => navigate("/notification")}><IoMdNotifications /> Notifi</button>
                 <button onClick={logOut}><MdLogout /> Logout</button>
             </div>
         </div>
