@@ -8,10 +8,13 @@ import { app } from 'util/Firebase';
 import { toast } from 'react-toastify';
 import { FaSearch } from "react-icons/fa";
 import {IoMdNotifications} from 'react-icons/io';
+import UseTranslation from 'hooks/UseTranslation';
 
 export default function MenuList(){
 
     const navigate = useNavigate();
+
+    const trans = UseTranslation();
 
     const logOut = async () => {
         try {
@@ -27,11 +30,21 @@ export default function MenuList(){
     return (
         <div className="footer">
             <div className="footer__grid">
-                <button type="button" onClick={() => navigate("/")}><BsHouse /> Home</button>
-                <button onClick={() => navigate("/profile")}><FaUserCircle /> Profile</button>
-                <button onClick={() => navigate("/search")}><FaSearch /> Search</button>
-                <button onClick={() => navigate("/notification")}><IoMdNotifications /> Notifi</button>
-                <button onClick={logOut}><MdLogout /> Logout</button>
+                <button type="button" onClick={() => navigate("/")}><BsHouse /> 
+                    <span className="footer__grid--text">{trans('MENU_HOME')}</span>
+                </button>
+                <button onClick={() => navigate("/profile")}><FaUserCircle /> 
+                    <span className="footer__grid--text">{trans('MENU_PROFILE')}</span>
+                </button>
+                <button onClick={() => navigate("/search")}><FaSearch /> 
+                    <span className="footer__grid--text">{trans('MENU_SEARCH')}</span>
+                </button>
+                <button onClick={() => navigate("/notification")}><IoMdNotifications /> 
+                    <span className="footer__grid--text">{trans('MENU_NOTIFICATION')}</span>
+                </button>
+                <button onClick={logOut}><MdLogout />
+                    <span className="footer__grid--text">{trans('MENU_LOGOUT')}</span>
+                 </button>
             </div>
         </div>
     );

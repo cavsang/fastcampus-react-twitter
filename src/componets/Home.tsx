@@ -6,6 +6,7 @@ import { collection, query, orderBy, onSnapshot, doc, getDoc, where } from 'fire
 import { db } from 'util/Firebase';
 import Header from './Header';
 import { PostProps } from 'util/MyTypes';
+import UseTranslation from 'hooks/UseTranslation';
 
 export default function Home() {
 
@@ -15,6 +16,8 @@ export default function Home() {
     const [select, setSelect] = useState<string>("For You");
     const [fusers, setFusers] = useState<string[]>([]);
     const {user} = useContext(AuthContext);
+
+    const trans = UseTranslation();
 
     const getFollwingDocs = useCallback( async () => {
         const docRef = doc(db, 'following',user?.uid as string);
@@ -56,14 +59,13 @@ export default function Home() {
                 setFollowingPosts([]);
             }
         }
-        console.log('useeffect');
     },[ fusers, user]);
     
 
     return (
         <div className="home">
             
-            <Header title1="Home" title2="For You" title3="Follow" select={select} setSelect={setSelect}/>
+            <Header title1={trans("MENU_HOME")} title2={trans("MENU_HOMETAB1")} title3={trans("MENU_HOMETAB2")} select={select} setSelect={setSelect}/>
             
             {select && select === "For You" && (<PostForm />)}
 

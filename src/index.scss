@@ -1,21 +1,56 @@
-$font : -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-
-$background :#1e293b;
-$white : #ffffff;
-$border: 1px solid #708090;
-$activeBorder: #3b82f6;
-$primaryColor: #60a5fa;
-$grayText: #9ca3af;
-$danger: #dc2626;
-$gray: #6b7280;
+@import "./utils.scss";
 
 @mixin atag {
   :hover, focus{
     color: gray;
   }
 }
+
+@include xsMobile{
+  .footer{
+    display: none;
+  }
+  .layout{
+    border: none;
+  }
+}
+
+
+@include mobile{
+    .footer{
+      &__grid{
+        &--text{
+          display: none; 
+        }
+        button{
+          font-size: 18pt !important;
+        }
+      }
+    }
+
+    .layout{
+      border: none;
+    }
+}
+
+@include tablet{
+    .footer{
+      &__grid{
+        &--text{
+          display: none; 
+        }
+        button{
+          font-size: 24pt !important;
+        }
+      }
+    }
+
+    .layout{
+      border: none;
+    }
+}
+
+
 
 
 //전체 레이아웃.
@@ -70,6 +105,10 @@ body {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       background-color: transparent;
+
+      &--text{
+        background-color: transparent;
+      }
 
       button{
         display: flex;
@@ -533,6 +572,12 @@ body {
     padding: 10px;
     border-bottom: 1px solid $gray;
 
+    &__flex{
+      display: flex;
+      gap: 8px;
+
+    }
+
     &__image{
       width:100px;
       height: 100px;
@@ -545,6 +590,7 @@ body {
       background-color: $primaryColor;
       border-radius: 0.3rem;
       padding: 5px;
+      cursor: pointer;
     }
 
     &__text{
@@ -615,4 +661,5 @@ body {
   width: 0;
   height: 0;
 }
+
 

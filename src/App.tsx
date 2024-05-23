@@ -7,6 +7,7 @@ import AuthContext from 'util/AuthContext';
 import Loader from 'componets/Loader';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from 'util/Firebase';
+import {RecoilRoot} from 'recoil';
 
 function App() {
 
@@ -31,10 +32,12 @@ function App() {
 
   return (
     <>
-      <Layout>
-        <ToastContainer theme="dark" autoClose={1000} hideProgressBar newestOnTop/>
-        {init ? <MyRouter isAunthenticated={isAunthenticated} /> : <Loader />}
-      </Layout>
+      <RecoilRoot>
+        <Layout>
+          <ToastContainer theme="dark" autoClose={1000} hideProgressBar newestOnTop/>
+          {init ? <MyRouter isAunthenticated={isAunthenticated} /> : <Loader />}
+        </Layout>
+      </RecoilRoot>
     </>    
   );
 }

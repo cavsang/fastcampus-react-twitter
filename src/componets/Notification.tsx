@@ -4,13 +4,14 @@ import AuthContext from 'util/AuthContext';
 import { collection, query, orderBy, onSnapshot, where, updateDoc, doc } from 'firebase/firestore';
 import { db } from 'util/Firebase';
 import { Link } from 'react-router-dom';
+import UseTranslation from 'hooks/UseTranslation';
 
 
 export default function Notification(){
 
     const {user} = useContext(AuthContext);
     const [notification, setNotification] = useState<NoticationProps[]>([]);
-    
+    const trans = UseTranslation();
 
     const getNotifications= async () => {
         const notifiReq = collection(db,'notifications');
@@ -40,7 +41,7 @@ export default function Notification(){
 
     return(
             <div className="post">
-                <div className="search__title">Notification</div>
+                <div className="search__title">{trans("MENU_NOTIFICATION")}</div>
                 {notification?.map((data, index) => {
                     return (
                         <div className="notifaction-box" key={data?.id}>
