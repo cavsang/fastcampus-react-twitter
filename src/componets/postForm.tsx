@@ -40,7 +40,11 @@ export default function PostForm(){
         }
     }
 
-    const onKeyUp = (e:React.KeyboardEvent<HTMLInputElement>) => {
+    const onKeyUp = (e:any) => {
+        if(e.isComposing || e.keyCode === 229) {
+            return;
+        }
+
         if(e.keyCode == 32){ //space
             //setHashtag()
             setHashTag((tag) => {
@@ -81,7 +85,8 @@ export default function PostForm(){
                 uid : user?.uid,
                 email : user?.email,
                 hashTags: hashTag,
-                imageUrl: imageUrl
+                imageUrl: imageUrl,
+                profileUrl: user?.photoURL
             });
             setContent("");
             toast.success("게시글을 생성했습니다.");

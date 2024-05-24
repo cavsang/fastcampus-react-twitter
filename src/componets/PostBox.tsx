@@ -83,8 +83,6 @@ export default function PostBox({post}:WrapPostProps){
         } catch (e:any) {
             toast.error(e?.code);
         }
-        
-
     }
 
     const removeFollow = async () => {
@@ -112,13 +110,14 @@ export default function PostBox({post}:WrapPostProps){
         }
     },[user]);
 
+
     return (
         <div className="post__box">
         
             <div className="post__box-profile">
                 <div className="post__flex">
                     {post?.profileUrl ? 
-                        (<img src={post?.profileUrl} alt="profile" className="post__box-profile-img"/>) 
+                        (<img src={post?.profileUrl} alt="profile" className="post__box-profile-icon"/>) 
                         : 
                         <FaUserCircle className="post__box-profile-icon"/>}
                 </div>
