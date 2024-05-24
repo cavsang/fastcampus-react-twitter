@@ -14,7 +14,7 @@ export default function PostBox({post}:WrapPostProps){
 
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
-    const imageRef = ref(storage, post?.imageUrl);
+    const imageRef = ref(storage, post?.imageUrl?.[0]);
     const [following, setFollwoing] = useState<boolean>(false);
 
 
@@ -139,7 +139,10 @@ export default function PostBox({post}:WrapPostProps){
                 </div>
                 {post?.imageUrl && (
                     <div className="post__image-div">
-                        <img src={post?.imageUrl} alt="image-div" className="post__image" width="100" height= "100"/>
+                        {post?.imageUrl.map(img => (
+                            <img src={img} key={img} alt="image-div" 
+                                className="post__image" width="100" height= "100"/>
+                        ))}
                     </div> 
                 )}
             </Link>
