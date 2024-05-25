@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {FiImage} from 'react-icons/fi';
 import { toast } from "react-toastify";
 import {addDoc, collection, updateDoc, doc} from 'firebase/firestore';
@@ -46,7 +46,7 @@ export default function PostForm(){
 
      const resizeFile = (file: Blob) =>
         new Promise((resolve) => {
-            Resizer.imageFileResizer(file, 100, 100, "JPEG", 100, 0, (uri) => {
+            Resizer.imageFileResizer(file, 300, 300, "JPEG", 92, 0, (uri) => {
                 resolve(uri);
             },"file");
         }
@@ -65,7 +65,7 @@ export default function PostForm(){
     const onKeyUp = (e:any) => {
         const {nativeEvent : {data}} = e;
         
-        if(data == " "){ //space
+        if(data === " "){ //space
             //setHashtag()
             setHashTag((tag) => {
                 if(tag?.includes(hashTagInput.trim())){
@@ -154,7 +154,7 @@ export default function PostForm(){
 
     return (
         <form className="post-form" onSubmit={onSubmit}>
-                <textarea name="content" id="content" required placeholder="what is happening?" 
+                <textarea name="content" id="content" required placeholder="입력" 
                 className="post-form__textarea" onChange={onChange} value={content}></textarea>
                 <div className="post-form__hashtag">
                     <div className="post-form__hashtag-output">

@@ -98,7 +98,7 @@ export default function PostEdit(){
 
     const resizeFile = (file: Blob) =>
         new Promise((resolve) => {
-            Resizer.imageFileResizer(file, 100, 100, "JPEG", 100, 0, (uri) => {
+            Resizer.imageFileResizer(file, 300, 300, "JPEG", 92, 0, (uri) => {
                 resolve(uri);
             },"file");
         }
@@ -204,7 +204,7 @@ export default function PostEdit(){
 
     return (
         <form className="post-form" onSubmit={onSubmit}>
-                <textarea name="content" id="content" required placeholder="what is happening?" 
+                <textarea name="content" id="content" required placeholder="입력" 
                 className="post-form__textarea" onChange={onChange} value={content}></textarea>
                 
                 <div className="post-form__hashtag">

@@ -72,7 +72,7 @@ export default function ProfileEdit(){
 
     const resizeFile = (file: Blob) =>
         new Promise((resolve) => {
-            Resizer.imageFileResizer(file, 100, 100, "JPEG", 100, 0, (uri) => {
+            Resizer.imageFileResizer(file, 200, 200, "JPEG", 100, 0, (uri) => {
                 resolve(uri);
             },"file");
         }

@@ -37,8 +37,7 @@
       border: none;
 
       .post__image-div__origin{
-        max-width: 350px;
-        max-height : 350px;
+        max-width: 98%;
       }
     }
 }
@@ -166,6 +165,8 @@ body {
       font-weight: bold;
       background-color: transparent;
       width: 100%;
+      display: flex;
+      justify-content: center;
     }
 
     &__tabs{
@@ -217,6 +218,7 @@ body {
       display: flex;
       align-items: flex-end;
       gap : 16px;
+      flex-wrap: wrap;
 
       button{
         border: none;
@@ -352,7 +354,7 @@ body {
     &__image-div{
       padding: 16px;
       display: flex;
-      flex-flow: wrap;
+      flex-wrap: wrap;
       gap: 4px;
 
 
@@ -410,6 +412,7 @@ body {
           width: 30px;
           height: 30px;
           margin: 5px 0px 0px 5px;
+          border-radius: 50%;
         }
         
         .post__email{
@@ -574,6 +577,8 @@ body {
       font-size: 30px;
       font-weight: 600;
       border-bottom: 1px solid $gray;
+      display: flex;
+      justify-content: center;
     }
 
     &__input{
