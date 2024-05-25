@@ -12,6 +12,11 @@
   }
   .layout{
     border: none;
+
+    .post__image-div__origin{
+      max-width: 200px;
+      max-height : 200px;
+    }
   }
 }
 
@@ -30,6 +35,11 @@
 
     .layout{
       border: none;
+
+      .post__image-div__origin{
+        max-width: 350px;
+        max-height : 350px;
+      }
     }
 }
 
@@ -47,10 +57,23 @@
 
     .layout{
       border: none;
+
+      .post__image-div__origin{
+        max-width: 450px;
+        max-height : 450px;
+      }
     }
 }
 
+@include desktop{
 
+    .layout{
+      .post__image-div__origin{
+        max-width: 550px;
+        max-height : 550px;
+      }
+    }
+}
 
 
 //전체 레이아웃.
@@ -72,11 +95,11 @@ body {
 }
 
 .sticky{
-  width: 99%;  
+  width: 97%;  
   position:sticky;
 
   //가운데정렬을 할수있도록 max-width, margin automatic test
-  max-width: 600px;
+  max-width: 590px;
   margin: 0 auto;
   top: 0;
 }
@@ -333,10 +356,7 @@ body {
       gap: 4px;
 
 
-      &__origin{
-        max-width: 500px;
-        max-height: 500px;
-      }
+      
 
     }
 

@@ -8,6 +8,7 @@ import { ref, deleteObject, uploadString, getDownloadURL } from 'firebase/storag
 import { storage } from 'util/Firebase';
 import { updateProfile } from 'firebase/auth';
 import { toast } from 'react-toastify';
+import Resizer from "react-image-file-resizer";
 
 export default function ProfileEdit(){
 
@@ -69,15 +70,26 @@ export default function ProfileEdit(){
 
     };
 
+    const resizeFile = (file: Blob) =>
+        new Promise((resolve) => {
+            Resizer.imageFileResizer(file, 100, 100, "JPEG", 100, 0, (uri) => {
+                resolve(uri);
+            },"file");
+        }
+    );
+
     const handleFileUpload = (e:any) => {
         const {target: {files}} = e;
         const file = files?.[0];
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onloadend = (e:any) => {
-            const {result} = e?.currentTarget;
-            setImage(result);
-        } 
+        resizeFile(file).then((uri:any) => {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(uri);
+                fileReader.onloadend = (e:any) => {
+                    const {result} = e?.currentTarget;
+                    setImage(result);
+                } 
+            }
+        );
     }
     
     return (

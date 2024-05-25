@@ -6,6 +6,7 @@ import { db,storage } from "util/Firebase";
 import AuthContext from "util/AuthContext";
 import {v4 as uuidv4} from "uuid";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import Resizer from "react-image-file-resizer";
 
 export default function PostForm(){
 
@@ -15,24 +16,41 @@ export default function PostForm(){
     const {user} = useContext(AuthContext);
 
     const [image, setImage] = useState<string[]>([]);
+    const [thumbNail, setThumbNail] = useState<string[]>([]);
     //업로드할때 두번눌림 방지.
     const [isSubmit, setIsSubmit]  = useState<boolean>(false);
 
     
-    const handleFileUpload = (e:any) => {
+    const handleFileUpload = async (e:any) => {
         const {target:{files}} =e;
 
-        for(let i = 0; i < files.length ;i++){
-            let file = files?.item(i);
-
+        for(let file of files){
             const fileReader = new FileReader();
             fileReader.readAsDataURL(file);
             fileReader.onloadend = (e:any) => {
                 const {result} = e?.currentTarget;
                 setImage((prev) => [...prev, result]);
             }
+
+            
+            resizeFile(file).then((uri:any) => {
+                    const thumbReader = new FileReader();
+                    thumbReader.readAsDataURL(uri);
+                    thumbReader.onloadend = (e:any) => {
+                    const {result} = e?.currentTarget;
+                    setThumbNail((prev) => [...prev, result]);
+                }
+            });
         }
      };
+
+     const resizeFile = (file: Blob) =>
+        new Promise((resolve) => {
+            Resizer.imageFileResizer(file, 100, 100, "JPEG", 100, 0, (uri) => {
+                resolve(uri);
+            },"file");
+        }
+    );
 
     const onChange = (e:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         const {target: {name, value}} = e;
@@ -98,11 +116,29 @@ export default function PostForm(){
                 }));
 
                 const result = await uploadUrls;
+
+                const thumbUrls = Promise.all(thumbNail?.map(async (img) => {
+
+                    //난수생성
+                    const key = `${user?.uid}/${uuidv4()}`;
+
+                    const storageRef = ref(storage, key);
+
+                    //1. image 업로드
+                    const data = await uploadString(storageRef, img, "data_url");
+
+                    //2. 업로드된 이미지의 download url 업데이트
+                    let imgUrl = await getDownloadURL(data?.ref);
+                    return imgUrl;
+                }));
+
+                const thumbResult =  await thumbUrls;
+
                 await updateDoc(doc(db, 'posts', docResult?.id),{
-                    imageUrl : result
+                    imageUrl : result,
+                    imageThumbUrl : thumbResult
                 });
                 
-                //imageUrls = uploadUrls;
             } 
                 
             toast.success("게시글을 생성했습니다.");

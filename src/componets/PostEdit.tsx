@@ -7,6 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { deleteObject, ref, uploadString, getDownloadURL } from "firebase/storage";
 import AuthContext from "util/AuthContext";
 import {v4 as uuidv4} from "uuid";
+import Resizer from "react-image-file-resizer";
 
 export default function PostEdit(){
 
@@ -16,7 +17,11 @@ export default function PostEdit(){
     const [hashTagInput, setHashTagInput] = useState<string>("");
 
     const [image, setImage] = useState<string[]>([]);
+    const [thumbNail, setThumbNail] = useState<string[]>([]);
+
     const [originalImage, setOriginalImage] = useState<string[]>([]);
+    const [oriThumb, setOriThumb] = useState<string[]>([]);
+
     const {user} = useContext(AuthContext);
     const [isSubmit, setIsSubmit]  = useState<boolean>(false);
 
@@ -30,6 +35,7 @@ export default function PostEdit(){
             setHashTag(document?.data()?.hashTags);
             setImage(document?.data()?.imageUrl);
             setOriginalImage(document?.data()?.imageUrl);
+            setOriThumb(document?.data()?.imageThumbUrl);
         }
     },[params?.id]); 
 
@@ -78,8 +84,25 @@ export default function PostEdit(){
                 const {result} = e?.currentTarget;
                 setImage((prev) => [...prev, result]);
             }
+
+            resizeFile(file).then((uri:any) => {
+                    const thumbReader = new FileReader();
+                    thumbReader.readAsDataURL(uri);
+                    thumbReader.onloadend = (e:any) => {
+                    const {result} = e?.currentTarget;
+                    setThumbNail((prev) => [...prev, result]);
+                }
+            });
         }
     };
+
+    const resizeFile = (file: Blob) =>
+        new Promise((resolve) => {
+            Resizer.imageFileResizer(file, 100, 100, "JPEG", 100, 0, (uri) => {
+                resolve(uri);
+            },"file");
+        }
+    );
 
     const removeImgForServer = (targetImage:string) => {
         const imageRef = ref(storage, targetImage);
@@ -111,7 +134,10 @@ export default function PostEdit(){
                 if(isChange){
                     originalImage.map(o => {
                         removeImgForServer(o);
-                    })
+                    });
+                    oriThumb.map(o => {
+                        removeImgForServer(o);
+                    });
                     
                 }
 
@@ -131,13 +157,39 @@ export default function PostEdit(){
                 }));
 
                 const result = await uploadUrls;
+
+
+                const thumbUrls = Promise.all(thumbNail?.map(async (img) => {
+
+                    //난수생성
+                    const key = `${user?.uid}/${uuidv4()}`;
+
+                    const storageRef = ref(storage, key);
+
+                    //1. image 업로드
+                    const data = await uploadString(storageRef, img, "data_url");
+
+                    //2. 업로드된 이미지의 download url 업데이트
+                    let imgUrl = await getDownloadURL(data?.ref);
+                    return imgUrl;
+                }));
+
+                const thumbResult =  await thumbUrls;
+
+
+
                 updateData.imageUrl = result;
+                updateData.imageThumbUrl = thumbResult;
 
             }else if( (!image || image?.length === 0)  && originalImage?.length > 0){
                 for(let o of originalImage){
                     removeImgForServer(o);
                 }
+                for(let o of oriThumb){
+                    removeImgForServer(o);
+                }
                 updateData.imageUrl = [];
+                updateData.imageThumbUrl = [];
             }
             //console.log(updateData);
             await updateDoc(docRef,updateData);
@@ -181,7 +233,7 @@ export default function PostEdit(){
                         {image?.length > 0 && (
                             <div className="post-form__attachment">
                                 {image?.map(img => (
-<img src={img} key={img} alt="attachment" width="100" height="100" /> 
+                                     <img src={img} key={img} alt="attachment" width="100" height="100" /> 
                                 ))}
                                 <button className="post-form__clear-btn" onClick={() => {setImage([])}}>삭제</button>
                             </div>

@@ -32,6 +32,12 @@ export default function PostBox({post, isOrigin}:WrapPostProps){
                 }
             }
 
+            if(post?.imageThumbUrl){
+                for(let o of post?.imageThumbUrl){
+                    removeImgForServer(o);
+                }
+            }
+
             await deleteDoc(doc(db,'posts', id));
             navigate("/");
         }
@@ -144,19 +150,23 @@ export default function PostBox({post, isOrigin}:WrapPostProps){
                 <div className="post__box-content">
                     {post?.content}
                 </div>
-                {post?.imageUrl && (
+                {isOrigin ? (post?.imageUrl && (
                     <div className="post__image-div">
                         {post?.imageUrl.map(img => {
-                            if(isOrigin){
-                                return <img src={img} key={img} alt="image-div" 
-                                className="post__image-div__origin"/>
-                            }else{
-                                return <img src={img} key={img} alt="image-div" 
-                                className="post__image-div__100" width="100" height= "100"/>
-                            }
+                            return <img src={img} key={img} alt="image-div" 
+                            className="post__image-div__origin"/>
                         })}
-                    </div> 
-                )}
+                    </div>
+                )):
+                (post?.imageThumbUrl && (
+                    <div className="post__image-div">
+                        {post?.imageThumbUrl.map(img => {
+                            return <img src={img} key={img} alt="image-div" 
+                             width="100" height="100"/>
+                        })}
+                    </div>
+                ))
+            }
             </Link>
         <div className="post-form">
             <div className="post-form__hashtag">

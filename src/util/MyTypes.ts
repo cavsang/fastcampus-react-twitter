@@ -42,8 +42,9 @@ export interface PostProps {
     likes? : string[],
     likeCount? : number;
     comments?: CommentProps[],
-    hashTags: string[],
-    imageUrl : string[],
+    hashTags?: string[],
+    imageUrl? : string[],
+    imageThumbUrl?: string[]
 }
 
 export interface CommentProps{
