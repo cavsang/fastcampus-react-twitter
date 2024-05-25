@@ -36,7 +36,7 @@ export default function PostDetail(){
             </div>
             {post ? 
             <>
-                <PostBox post={post} />
+                <PostBox post={post} isOrigin={true} />
                 <CommentForm post={post} />
                 <CommentBoxs post={post}/>
             </> : <Loader />}

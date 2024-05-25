@@ -21,7 +21,7 @@ export default function PostForm(){
     
     const handleFileUpload = (e:any) => {
         const {target:{files}} =e;
-        
+
         for(let i = 0; i < files.length ;i++){
             let file = files?.item(i);
 
@@ -45,11 +45,9 @@ export default function PostForm(){
     }
 
     const onKeyUp = (e:any) => {
-        if(e.isComposing || e.keyCode === 229) {
-            return;
-        }
-
-        if(e.keyCode == 32){ //space
+        const {nativeEvent : {data}} = e;
+        
+        if(data == " "){ //space
             //setHashtag()
             setHashTag((tag) => {
                 if(tag?.includes(hashTagInput.trim())){
@@ -131,7 +129,7 @@ export default function PostForm(){
                     <div className="post-form__hashtag-input">
                         <input type="text" name="hashtag_input" id="hashtag_input" 
                         placeholder="#해시태그 + 스페이스바 입력" 
-                        onKeyUp={onKeyUp}
+                        onInputCapture={onKeyUp}
                         onChange={onChange} 
                         value={hashTagInput}/>
                     </div>                    

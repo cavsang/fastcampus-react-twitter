@@ -15,8 +15,8 @@ export default function PostEdit(){
     const [hashTag, setHashTag] = useState<string[]>([]);
     const [hashTagInput, setHashTagInput] = useState<string>("");
 
-    const [image, setImage] = useState<string | null>(null);
-    const [originalImage, setOriginalImage] = useState<string | null>(null);
+    const [image, setImage] = useState<string[]>([]);
+    const [originalImage, setOriginalImage] = useState<string[]>([]);
     const {user} = useContext(AuthContext);
     const [isSubmit, setIsSubmit]  = useState<boolean>(false);
 
@@ -70,13 +70,14 @@ export default function PostEdit(){
 
     const handleFileUpload = (e:any) => {
         const {target:{files}} =e;
-        const file = files?.[0];
-        const fileReader = new FileReader();
 
-        fileReader.readAsDataURL(file);
-        fileReader.onloadend = (e:any) => {
-            const {result} = e?.currentTarget;
-            setImage(result);
+        for(let file of files){
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onloadend = (e:any) => {
+                const {result} = e?.currentTarget;
+                setImage((prev) => [...prev, result]);
+            }
         }
     };
 
@@ -91,7 +92,7 @@ export default function PostEdit(){
         try {
             const docRef = doc(db, 'posts', params?.id as string);
             let isChange = false;
-            if(image && originalImage){
+            if(image.length > 0 && originalImage){
                 isChange = !(image === originalImage);
             } 
 
@@ -106,21 +107,37 @@ export default function PostEdit(){
             };
 
 
-            if(image){
+            if(image.length > 0){
                 if(isChange){
-                    removeImgForServer(originalImage as string);
+                    originalImage.map(o => {
+                        removeImgForServer(o);
+                    })
+                    
                 }
-                const key = `${user?.uid}/${uuidv4()}`;
-                const storageRef = ref(storage, key);
-                //1. image 업로드
-                const data = await uploadString(storageRef, image, "data_url");
-                //2. 업로드된 이미지의 download url 업데이트
-                const downloadImgUrl = await getDownloadURL(data?.ref);
-                updateData.imageUrl = downloadImgUrl;
 
-            }else if( !image && originalImage){
-                removeImgForServer(originalImage);
-                updateData.imageUrl = deleteField();
+                const uploadUrls = Promise.all(image?.map(async (img) => {
+
+                    //난수생성
+                    const key = `${user?.uid}/${uuidv4()}`;
+
+                    const storageRef = ref(storage, key);
+
+                    //1. image 업로드
+                    const data = await uploadString(storageRef, img, "data_url");
+
+                    //2. 업로드된 이미지의 download url 업데이트
+                    let imgUrl = await getDownloadURL(data?.ref);
+                    return imgUrl;
+                }));
+
+                const result = await uploadUrls;
+                updateData.imageUrl = result;
+
+            }else if( (!image || image?.length === 0)  && originalImage?.length > 0){
+                for(let o of originalImage){
+                    removeImgForServer(o);
+                }
+                updateData.imageUrl = [];
             }
             //console.log(updateData);
             await updateDoc(docRef,updateData);
@@ -159,12 +176,14 @@ export default function PostEdit(){
                             <FiImage className="post-form__file-icon"/>
                         </label>
                         {/* 위의 label의 file-input 과 똑같이 이름을 줘야한다. */}
-                        <input type="file" name="file-input" id="file-input" accept="image/*" onChange={handleFileUpload} className="hidden"/>
+                        <input type="file" name="file-input" id="file-input" multiple accept="image/*" onChange={handleFileUpload} className="hidden"/>
 
-                        {image && (
+                        {image?.length > 0 && (
                             <div className="post-form__attachment">
-                                <img src={image} alt="attachment" width="100" height="100" /> 
-                                <button className="post-form__clear-btn" onClick={() => {setImage(null)}}>삭제</button>
+                                {image?.map(img => (
+<img src={img} key={img} alt="attachment" width="100" height="100" /> 
+                                ))}
+                                <button className="post-form__clear-btn" onClick={() => {setImage([])}}>삭제</button>
                             </div>
                         )}
                         

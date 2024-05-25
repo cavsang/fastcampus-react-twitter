@@ -10,19 +10,26 @@ import { db, storage } from "util/Firebase";
 import { ref, deleteObject } from "firebase/storage";
 import { toast } from "react-toastify";
 
-export default function PostBox({post}:WrapPostProps){
+export default function PostBox({post, isOrigin}:WrapPostProps){
 
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
-    const imageRef = ref(storage, post?.imageUrl?.[0]);
+    //const imageRef = ref(storage, post?.imageUrl?.[0]);
     const [following, setFollwoing] = useState<boolean>(false);
+
+    const removeImgForServer = (targetImage:string) => {
+        const imageRef = ref(storage, targetImage);
+        deleteObject(imageRef).catch(error => {console.log(error)});
+    }
 
 
     const handleDelete = async (id:string) => {
         if(window.confirm("삭제 하시겠습니까?")){
 
             if(post?.imageUrl){
-                deleteObject(imageRef).catch(error => {console.log(error)});
+                for(let o of post?.imageUrl){
+                    removeImgForServer(o);
+                }
             }
 
             await deleteDoc(doc(db,'posts', id));
@@ -139,10 +146,15 @@ export default function PostBox({post}:WrapPostProps){
                 </div>
                 {post?.imageUrl && (
                     <div className="post__image-div">
-                        {post?.imageUrl.map(img => (
-                            <img src={img} key={img} alt="image-div" 
-                                className="post__image" width="100" height= "100"/>
-                        ))}
+                        {post?.imageUrl.map(img => {
+                            if(isOrigin){
+                                return <img src={img} key={img} alt="image-div" 
+                                className="post__image-div__origin"/>
+                            }else{
+                                return <img src={img} key={img} alt="image-div" 
+                                className="post__image-div__100" width="100" height= "100"/>
+                            }
+                        })}
                     </div> 
                 )}
             </Link>

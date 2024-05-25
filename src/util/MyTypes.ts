@@ -11,7 +11,8 @@ export interface ChildrenProps{
 }
 
 export interface WrapPostProps{
-    post: PostProps
+    post: PostProps,
+    isOrigin?: boolean
 }
 
 export interface WrapCommentProps{

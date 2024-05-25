@@ -328,6 +328,16 @@ body {
 
     &__image-div{
       padding: 16px;
+      display: flex;
+      flex-flow: wrap;
+      gap: 4px;
+
+
+      &__origin{
+        max-width: 500px;
+        max-height: 500px;
+      }
+
     }
 
     &__back{
