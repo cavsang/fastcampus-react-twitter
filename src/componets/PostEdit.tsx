@@ -82,7 +82,7 @@ export default function PostEdit(){
             fileReader.readAsDataURL(file);
             fileReader.onloadend = (e:any) => {
                 const {result} = e?.currentTarget;
-                setImage((prev) => [...prev, result]);
+                setImage((prev) => prev ? [...prev, result] : [result]);
             }
 
             resizeFile(file).then((uri:any) => {
@@ -90,7 +90,7 @@ export default function PostEdit(){
                     thumbReader.readAsDataURL(uri);
                     thumbReader.onloadend = (e:any) => {
                     const {result} = e?.currentTarget;
-                    setThumbNail((prev) => [...prev, result]);
+                    setThumbNail((prev) => prev ? [...prev, result] : [result]);
                 }
             });
         }
@@ -115,8 +115,15 @@ export default function PostEdit(){
         try {
             const docRef = doc(db, 'posts', params?.id as string);
             let isChange = false;
-            if(image.length > 0 && originalImage){
-                isChange = !(image === originalImage);
+            if(image?.length > 0 && originalImage?.length > 0){
+                for(let i = 0 ; i < originalImage?.length ; i++){
+                    const img1 = image?.[i];
+                    const img2 = originalImage?.[i];
+
+                    isChange = img1 !== img2;
+                    if(isChange)
+                        break;
+                }
             } 
 
             let updateData:any = {
@@ -130,12 +137,12 @@ export default function PostEdit(){
             };
 
 
-            if(image.length > 0){
+            if(image?.length > 0){
                 if(isChange){
-                    originalImage.map(o => {
+                    originalImage?.map(o => {
                         removeImgForServer(o);
                     });
-                    oriThumb.map(o => {
+                    oriThumb?.map(o => {
                         removeImgForServer(o);
                     });
                     
@@ -176,12 +183,10 @@ export default function PostEdit(){
 
                 const thumbResult =  await thumbUrls;
 
-
-
                 updateData.imageUrl = result;
                 updateData.imageThumbUrl = thumbResult;
 
-            }else if( (!image || image?.length === 0)  && originalImage?.length > 0){
+            }else if( (image?.length === 0)  && originalImage?.length > 0){
                 for(let o of originalImage){
                     removeImgForServer(o);
                 }
@@ -191,11 +196,11 @@ export default function PostEdit(){
                 updateData.imageUrl = [];
                 updateData.imageThumbUrl = [];
             }
-            //console.log(updateData);
             await updateDoc(docRef,updateData);
             toast.success("게시글을 수정 했습니다.");
             
         } catch (error:any) {
+            console.log(error);
             toast.error(error?.code);
         }
         setIsSubmit(false);

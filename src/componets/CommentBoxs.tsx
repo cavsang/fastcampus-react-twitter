@@ -58,7 +58,9 @@ function CommentBox({comment, onDelete}:WrapCommentProps){
         <div className="post__box">
             <div className="post__box-profile">
                  <div className="post__flex">
-                        <FaUserCircle className="post__box-profile-icon"/>
+                     {comment?.profileImg ? <img src={comment?.profileImg} className="post__box-profile-icon" /> 
+                     : 
+                     <FaUserCircle className="post__box-profile-icon"/>}
                 </div>
                 <div className="post__email">{comment?.email}</div>
                 <div className="post__createAt">{comment?.createAt}</div>

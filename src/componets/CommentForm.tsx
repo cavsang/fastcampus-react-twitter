@@ -18,6 +18,8 @@ export default function CommentForm({post}:WrapPostProps){
         setComment(value);
     }
 
+    const substr = (str:string) => str.substring(0,15)+"...";
+
     const onSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -32,7 +34,8 @@ export default function CommentForm({post}:WrapPostProps){
                 second: "2-digit"
             }),
             email: user?.email as string,
-            uid: user?.uid as string
+            uid: user?.uid as string,
+            profileImg: user?.photoURL as string
         };
 
         try {
@@ -40,9 +43,11 @@ export default function CommentForm({post}:WrapPostProps){
                 comments: arrayUnion(cm)
             });
 
+            
+
             if(user?.uid !== post?.uid){
                 await addDoc(collection(db, 'notifications'),{
-                    content: `${user?.email}이  댓글을 입력하였습니다.`,
+                    content: `${user?.email}이 '${substr(comment)}' 댓글을 입력하였습니다.`,
                     createAt : new Date()?.toLocaleDateString("ko",{
                         hour: "2-digit",
                         minute : "2-digit",

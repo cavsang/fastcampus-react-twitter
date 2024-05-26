@@ -52,5 +52,6 @@ export interface CommentProps{
     createAt : string,
     email?: string,
     uid: string,
-    id?: string 
+    id?: string,
+    profileImg?:string
 }
